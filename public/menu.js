@@ -3,12 +3,32 @@ var bucketList;
 window.addEventListener('load', function () {
 onLoad();
 })
-/*  Text tests
-    menuSection.appendChild(document.createElement('p').appendChild(document.createTextNode('Hi!')));
-*/
+
+function getMenu(callback) {
+    console.log('flag1');
+    $.ajax({
+        url: '/getMenu',
+        type: 'GET',
+        dataType: 'json',
+        success: function (result) {
+            console.log(result);
+            callback(menu);
+        },
+        error: function (error) {
+            console.log(error);
+            callback(new Menu([]))
+        }
+    })
+}
+
+
 function onLoad() {
+
     const menuSection = document.getElementsByTagName('section')[0];
     menuSection.classList.add('menuSection');
+
+    getMenu(console.log);
+    
 
     //make new bucketlist + menu
     var menu = new Menu();
@@ -19,7 +39,7 @@ function onLoad() {
     c_bucket.addItem(new Bucket("Fried Chicken Bucket", 12.99, "10 Pieces", false, 10, 1, "https://i.imgur.com/hk3Wp5r.png"));
     c_bucket.addItem(new Bucket("Deep Fried Chicken Bucket", 12.99, "10 Pieces", false, 10, 1, "https://i.imgur.com/ND2Vzqp.png"));
     c_bucket.addItem(new Bucket("Mixed Chicken Bucket", 15.99, "5 Fried, 5 Spicy Pieces", false, 10, 3, "https://i.imgur.com/RN2Vztc.png"));
-    c_bucket.addItem(new Bucket("Hot Chicken Bucket", 15.99, "5 Fried, 5 Spicy Pieces", false, 10, 3, "https://i.imgur.com/1IytQkC.png"));
+    c_bucket.addItem(new Bucket("Hot Chicken Bucket", 15.99, "10 Pieces", false, 10, 3, "https://i.imgur.com/1IytQkC.png"));
     c_bucket.addItem(new Bucket("Veggie Chicken Bucket", 13.99, "10 Pieces", true, 10, 1, "https://i.imgur.com/ND2Vzqp.png"));
 
     //Make Drinks category + add children.
