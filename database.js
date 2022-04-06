@@ -3,7 +3,7 @@ const { debug, Console } = require('console');
 var file = "database.db";
 var exists = fs.existsSync(file);
 const sqlite3 = require('sqlite3').verbose();
-//var db = new sqlite3.Database(file);
+var db = new sqlite3.Database(file);
 
 // db.serialize(function() {
 //     db.each("SELECT Name FROM Menu", function(err, row) {
@@ -13,7 +13,7 @@ const sqlite3 = require('sqlite3').verbose();
 // db.close();
 
 function getMenu(callback, errorcallback) {
-    var query = `   SELECT Menu.ID, Menu.Name, Menu.Image, Menu.Price, Menu.Size, Menu.IsVeggie, MenuCategory.Name
+    var query = `   SELECT Menu.ID, Menu.Name, Menu.Image, Menu.Price, Menu.Size, Menu.IsVeggie, MenuCategory.Name as Category
                     FROM Menu, MenuCategory
                     WHERE Menu.Category = MenuCategory.ID`;
     db.serialize(() => {
@@ -29,4 +29,4 @@ function getMenu(callback, errorcallback) {
     })
 }
 
-module.exports = getMenu
+module.exports = { getMenu }

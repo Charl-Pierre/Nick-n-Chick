@@ -5,20 +5,28 @@ onLoad();
 })
 
 function getMenu(callback) {
-    console.log('flag1');
     $.ajax({
-        url: '/getMenu',
+        url: 'getMenu',
         type: 'GET',
         dataType: 'json',
         success: function (result) {
-            console.log(result);
-            callback(menu);
+            //console.log(result);
+            callback(processMenu(result));
         },
         error: function (error) {
             console.log(error);
             callback(new Menu([]))
         }
     })
+}
+
+function processMenu(menuJSON) {
+    menuJSON.forEach(element => {
+        console.log(element);
+        
+
+
+    });
 }
 
 

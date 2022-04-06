@@ -8,9 +8,18 @@ const { nextTick } = require('process');
 
 app.use(morgan('tiny'));
 
+app.use('/', (req, res, next) => {
+    console.log('poop');
+    next()
+  })
+
+app.use('/', router);
 var staticPath = path.join(__dirname, "/public");
 app.use(express.static(staticPath));
-//app.use('/', router);
 
-app.listen(8083);
+
+
+
+
+app.listen(8023);
 module.exports = app;
