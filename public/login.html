@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="nl">
+    <head>
+        <meta charset="utf-8">
+        <title>NnC Login</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="https://i.imgur.com/JXX5Voe.png">
+        <script type="text/javascript" src="visuals.js"></script>  
+    </head>
+    <body>
+        <nav id="navbar">
+            <img class="logo-img" src="https://i.imgur.com/JXX5Voe.png" width="130" height="130" alt="Nick 'n Chick logo">
+            <a class = "nav__inactive" href="index.html">Home</a>
+            <a class = "nav__active" href="aboutus.html">About Us</a>
+            <a class = "nav__inactive" href="menu.html">Menu</a>
+            <a class = "nav__inactive" href="contact.html">Contact</a>
+            <a class = "nav__inactive--res" href="reserveren.html">Reserveren</a>
+        </nav>
+        <header>
+            <div class="banner">
+                <div id="centered"><h1>Login</h1></div>
+            </div>
+        </header>
+
+        <form name="data" action="http://localhost:8080/processForm" method="POST">
+            <p>Username: <input type="text" name="username" placeholder="UserName" required></p>
+            <p>Password: <input type="text" name="password" placeholder="Password"></p>
+            <p><input type="submit" value="Submit"/></p>
+            </form>
+    </body>
+</html>
