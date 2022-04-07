@@ -682,3 +682,21 @@ transform: scale(1.2);
 }
 
 /*:D*/
+
+.HistoryItem {
+  background-color: #970B1F;
+  padding: 10px;
+  border-radius: 20px;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+}
+
+.HistoryItem table, td, tr, th {
+  border-collapse: collapse;
+}
+
+.HistoryItem td {
+  padding: 5px 30px;
+  text-align: right;
+}

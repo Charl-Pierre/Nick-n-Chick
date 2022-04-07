@@ -23,37 +23,113 @@
                 <div id="centered"><h1>My Chick</h1></div>
             </div>
         </header>
-
+        <section>
+            <!--Menu placeholder section-->
+            
+        </section>
+        <footer>
+            <ul>
+                <li>
+                    <a href="https://www.youtube.com/watch?v=MDPV-24lxvY"><img class="social-media-icons" src="https://i.imgur.com/XXHE95K.png" alt="Youtube icon"></a>
+                </li>
+                <li>
+                    <a href="https://www.instagram.com/nickmandoeng/"><img class="social-media-icons" src="https://i.imgur.com/B1uzvm7.png" alt="Instagram icon"></a>
+                </li>
+                <li>
+                    <a href="https://twitter.com/Vohmu_"><img class="social-media-icons" src="https://i.imgur.com/MtXiemQ.png" alt="Twitter icon"></a>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <a href="https://www.youtube.com/watch?v=NscWoJVrEfw">Algemene Voorwaarden</a>
+                </li>
+                <li>
+                    <a href="https://students.uu.nl/praktische-zaken/in-en-uitschrijving/uitschrijven">Privacy Beleid</a>
+                </li>
+                <li>
+                    <a href="https://students.uu.nl/praktische-zaken/in-en-uitschrijving/uitschrijven">Cookieverklaring</a>
+                </li>
+                <li>
+                    <a href="https://students.uu.nl/praktische-zaken/in-en-uitschrijving/uitschrijven">Werken bij Nick 'n Chick</a>
+                </li>
+            </ul>
+            <img class="nix18" src="https://www.nix18.nl/binaries/small/content/gallery/nix18/channel-afbeeldingen/facebook.png" alt="Nix18 icon">
+            <p>Copyright © 2022 Nick 'n Chick</p>
+        </footer>
     </body>
     <script>
         window.addEventListener('load', function () {
-            onLoad();
+            //request allemaal bs
+            const ordersHistory = document.getElementsByTagName('section')[0];
+            var testOrder = new Order(121, "03/01/2002", ["chicken borger", "veggie borgi"], [12.99, 2.0], [2, 3]);
+            ordersHistory.appendChild(testOrder.orderElement);
         })
 
-        function onLoad()
-        {
-            //request allemaal bs
-            
-        }
-
         class Order {
+            orderElement
             constructor(orderID, date, items, prices, amounts){
                 this.orderID = orderID;
                 this.date = date;
                 this.items = items;
                 this.prices = prices;
                 this.amounts = amounts;
+                var str= "";
+                var prc= 0;
 
-                var orderElement = document.createElement('div');
+                //create the shizzles
+                this.orderElement = document.createElement('div');
+                this.orderElement.classList.add('HistoryItem');
                 var table = document.createElement('table');
+                this.orderElement.appendChild(table);
 
-                var dateElement = document.createElement('tr')
-                var th = document.createElement('th')
-                th.colSpan = 2;
-                th.appendChild(document.createTextNode('insert datum'));
-                dateElement.appendChild(th);
+                var dateElement = document.createElement('tr');
+                var thDate = document.createElement('th');
+
+                for(var i = 0; i < prices.length; i++){
+                    prc+= prices[i];
+                }
+                
+                //create text nodes
+                thDate.appendChild(document.createTextNode(date));
+                thDate.colSpan = 3;
+                
+
+                //appends the children
+                dateElement.appendChild(thDate);
                 table.appendChild(dateElement);
+                
+                for (var i = 0; i < items.length; i++){
+                    var row = document.createElement('tr');
+                    var tdItem = document.createElement('td');
+                    tdItem.appendChild(document.createTextNode(items[i]));
+                    tdItem.style = "text-align: left";
 
+                    var tdCount = document.createElement('td')
+                    tdCount.appendChild(document.createTextNode(amounts[i] + "x"));
+
+                    var tdPrc = document.createElement('td')
+                    tdPrc.appendChild(document.createTextNode((prices[i]).toFixed(2)));
+
+                    
+                    //tdItem.style = "width: 200px;";
+                    row.appendChild(tdItem);
+                    row.appendChild(tdCount);
+                    row.appendChild(tdPrc);
+
+                    //{Insert code die de row invult}
+                                         
+                    table.appendChild(row);
+                }
+
+                var bottomRow = document.createElement('tr');
+                var filler = document.createElement('td');
+                filler.colSpan = 2;
+                bottomRow.appendChild(filler);
+
+                var totalPrice = document.createElement('th');
+                totalPrice.appendChild(document.createTextNode('€'+ prc));
+                bottomRow.appendChild(totalPrice);
+                table.appendChild(bottomRow);
                 //TODO: append items and their prices to table
             }
         }
