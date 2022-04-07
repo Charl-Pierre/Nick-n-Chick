@@ -20,8 +20,4 @@ router.get('/getMenu', (req, res) => {
     });
 });
 
-router.get('/', (req, res) => {
-    res.send('Birds home page')
-  })
-
 module.exports = router

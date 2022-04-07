@@ -21,12 +21,30 @@ function getMenu(callback) {
 }
 
 function processMenu(menuJSON) {
+    //make category obj
+    categories = {};
     menuJSON.forEach(element => {
-        console.log(element);
-        
-
+        if(!(element.Category in categories))
+        {
+            categories[element.Category] = [];
+            //console.log('adding new category: ' + element.Category);
+        }
+        categories[element.Category].push(element);
+        //console.log('adding ' + element.Name + " to " + element.Category);
 
     });
+    
+    var menu = new Menu();
+    for (var element1 in categories) {
+        var category = new Category(element1);
+
+        categories[element1].forEach(element2 => {
+            var item = new Item(element2.Name, element2.Price, element2.Size, element2.IsVeggie, element2.Image);
+            category.addItem(item);
+        });
+        menu.addCategory(category);
+    }
+    return menu;
 }
 
 
@@ -35,47 +53,12 @@ function onLoad() {
     const menuSection = document.getElementsByTagName('section')[0];
     menuSection.classList.add('menuSection');
 
-    getMenu(console.log);
+    getMenu(menu => {
+        menuSection.insertBefore(menu.element, menuSection.lastChild);
+    });
     
-
-    //make new bucketlist + menu
-    var menu = new Menu();
     bucketList = new BucketList();
-
-    //Make Bucket category + add children.
-    c_bucket = new Category("Buckets");
-    c_bucket.addItem(new Bucket("Fried Chicken Bucket", 12.99, "10 Pieces", false, 10, 1, "https://i.imgur.com/hk3Wp5r.png"));
-    c_bucket.addItem(new Bucket("Deep Fried Chicken Bucket", 12.99, "10 Pieces", false, 10, 1, "https://i.imgur.com/ND2Vzqp.png"));
-    c_bucket.addItem(new Bucket("Mixed Chicken Bucket", 15.99, "5 Fried, 5 Spicy Pieces", false, 10, 3, "https://i.imgur.com/RN2Vztc.png"));
-    c_bucket.addItem(new Bucket("Hot Chicken Bucket", 15.99, "10 Pieces", false, 10, 3, "https://i.imgur.com/1IytQkC.png"));
-    c_bucket.addItem(new Bucket("Veggie Chicken Bucket", 13.99, "10 Pieces", true, 10, 1, "https://i.imgur.com/ND2Vzqp.png"));
-
-    //Make Drinks category + add children.
-    c_drinks = new Category("Drinks");
-    c_drinks.addItem(new Drink("Cola", 2.99, "500 mL", true, "https://i.imgur.com/Y5u0bNB.png"));
-    c_drinks.addItem(new Drink("Fanta", 2.99, "500 mL", true, "https://i.imgur.com/IsWe3Vp.png"));
-    c_drinks.addItem(new Drink("Boba", 3.99, "500 mL", true, "https://i.imgur.com/LB1Agw2.png"));
-    c_drinks.addItem(new Drink("Special Surprise Drink", 4.99, "500 mL", true, "https://i.imgur.com/pEGOVvM.png"));
-
-    //Make Extras category + add children.
-    c_extras = new Category("Extras");
-    c_extras.addItem(new Extra("Fries", 1.99, "Small", true, "https://i.imgur.com/kcR6CkI.png"));
-    c_extras.addItem(new Extra("Medium Fries", 2.99, "Medium", true,"https://i.imgur.com/kcR6CkI.png"));
-    c_extras.addItem(new Extra("Large Fries", 3.99, "Large", true,"https://i.imgur.com/kcR6CkI.png"));
-
-    c_merch = new Category("Merch");
-    c_merch.addItem(new Merch("T-Shirt", 13.99, "M", true, 'Black', "images/Merch_Shirt.png"));
-    c_merch.addItem(new Merch("Bikini", 15.99, "M", true, 'Red', "images/Merch_Swimsuit.png"));
-    c_merch.addItem(new Merch("Baby Rompertje", 10.99, "Smol", true, 'White', "images/Merch_BabyRompertje.png"));
-
-    //add categories to the menu
-    menu.addCategory(c_bucket);
-    menu.addCategory(c_drinks);
-    menu.addCategory(c_extras);
-    menu.addCategory(c_merch);
-
     menuSection.appendChild(bucketList.element);
-    menuSection.appendChild(menu.element);
 
     //final order button
     var orderButton = document.createElement('button');
