@@ -2,22 +2,25 @@ var express = require('express');
 var app = express();
 var path = require("path");
 var morgan = require('morgan');
+const cookieParser = require("cookie-parser");
+
 
 var router = require('./routes');
 const { nextTick } = require('process');
 
 app.use(morgan('tiny'));
 
-app.use('/', (req, res, next) => {
-    console.log('poop');
-    next()
-  })
+//parse incoming data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+//serve public pages
 app.use('/', router);
 var staticPath = path.join(__dirname, "/public");
 app.use(express.static(staticPath));
 
-
+// cookie parser middleware
+app.use(cookieParser());
 
 
 

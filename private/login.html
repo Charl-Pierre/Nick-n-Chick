@@ -15,7 +15,7 @@
             <a class = "nav__inactive" href="menu.html">Menu</a>
             <a class = "nav__inactive" href="contact.html">Contact</a>
             <a class = "nav__inactive--res" href="reserveren.html">Reserveren</a>
-            <a class = "nav__active" href="login.html">Log in</a>
+            <a class = "nav__active--acc" href="/account">MyNick</a>
 
         </nav>
         <header>
@@ -24,9 +24,9 @@
             </div>
         </header>
 
-        <form name="data" action="http://localhost:8080/processForm" method="POST">
-            <p>Username: <input type="text" name="username" placeholder="UserName" required></p>
-            <p>Password: <input type="text" name="password" placeholder="Password"></p>
+        <form name="data" action="/login" method="POST">
+            <p>Username: <input for="username" type="text" name="username" placeholder="UserName" required></p>
+            <p>Password: <input type="password" name="password" placeholder="Password"></p>
             <p><input type="submit" class= "reserveer__knop" value="Submit"/></p>
             </form>
     </body>

@@ -154,6 +154,36 @@ ul{
   background-color: #202020;
 }
 
+.nav__active--acc {
+  float: right;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+  background-color: #202020;
+}
+
+.nav__inactive--acc {
+  float: right;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+  transition: 0.3s;
+  background-color: #383838;
+}
+
+.nav__inactive--acc:hover {
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+  background-color: #202020;
+}
+
 /*banner styling*/
 .banner {
   height: 15em;
