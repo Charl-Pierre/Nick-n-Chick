@@ -689,7 +689,7 @@ transform: scale(1.2);
   border-radius: 20px;
   width: fit-content;
   height: fit-content;
-  margin: auto;
+  margin: 10px auto;
 }
 
 .HistoryItem table, td, tr, th {
@@ -699,4 +699,8 @@ transform: scale(1.2);
 .HistoryItem td {
   padding: 5px 30px;
   text-align: right;
+}
+
+.HistoryItem table {
+  min-width: 500px;
 }

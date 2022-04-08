@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="style.css">
         <link rel="icon" type="image/png" href="https://i.imgur.com/JXX5Voe.png">
         <script type="text/javascript" src="visuals.js"></script>  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     </head>
     <body>
         <nav id="navbar">
@@ -59,20 +60,31 @@
     </body>
     <script>
         window.addEventListener('load', function () {
-            //request allemaal bs
             const ordersHistory = document.getElementsByTagName('section')[0];
-            var testOrder = new Order(121, "03/01/2002", ["chicken borger", "veggie borgi"], [12.99, 2.0], [2, 3]);
-            ordersHistory.appendChild(testOrder.orderElement);
+            getHistory(history => {
+                history.forEach(order => {
+                    ordersHistory.appendChild(order.orderElement);
+                    console.log(order);
+                    console.log(order.element);
+                });
+                
+            });
+            
+
+
+            //request allemaal bs
+            
+            //var testOrder = new Order(121, "03/01/2002", ["chicken borger", "veggie borgi"], [12.99, 2.0], [2, 3]);
+            //ordersHistory.appendChild(testOrder.orderElement);
         })
 
-        class Order {
+        class Order 
+        {
             orderElement
-            constructor(orderID, date, items, prices, amounts){
+            constructor(orderID, date, items){
                 this.orderID = orderID;
                 this.date = date;
                 this.items = items;
-                this.prices = prices;
-                this.amounts = amounts;
                 var str= "";
                 var prc= 0;
 
@@ -85,8 +97,8 @@
                 var dateElement = document.createElement('tr');
                 var thDate = document.createElement('th');
 
-                for(var i = 0; i < prices.length; i++){
-                    prc+= prices[i];
+                for(var i = 0; i < items.length; i++){
+                    prc+= items[i].Price;
                 }
                 
                 //create text nodes
@@ -100,19 +112,19 @@
                 
                 for (var i = 0; i < items.length; i++){
                     var row = document.createElement('tr');
-                    var tdItem = document.createElement('td');
-                    tdItem.appendChild(document.createTextNode(items[i]));
-                    tdItem.style = "text-align: left";
+                    var tdName = document.createElement('td');
+                    tdName.appendChild(document.createTextNode(items[i].Name));
+                    tdName.style = "text-align: left";
 
                     var tdCount = document.createElement('td')
-                    tdCount.appendChild(document.createTextNode(amounts[i] + "x"));
+                    tdCount.appendChild(document.createTextNode(items[i].Amount + "x"));
 
                     var tdPrc = document.createElement('td')
-                    tdPrc.appendChild(document.createTextNode((prices[i]).toFixed(2)));
+                    tdPrc.appendChild(document.createTextNode((items[i].Price).toFixed(2)));
 
                     
-                    //tdItem.style = "width: 200px;";
-                    row.appendChild(tdItem);
+                    //tdName.style = "width: 200px;";
+                    row.appendChild(tdName);
                     row.appendChild(tdCount);
                     row.appendChild(tdPrc);
 
@@ -126,12 +138,37 @@
                 filler.colSpan = 2;
                 bottomRow.appendChild(filler);
 
-                var totalPrice = document.createElement('th');
+                var totalPrice = document.createElement('td');
                 totalPrice.appendChild(document.createTextNode('€'+ prc));
                 bottomRow.appendChild(totalPrice);
                 table.appendChild(bottomRow);
                 //TODO: append items and their prices to table
             }
+        }
+        function getHistory(callback){
+            $.ajax({
+                url: 'getHistory',
+                type: 'GET',
+                dataType: 'json',
+                success: function (result) {
+                    callback(processHistory(result));
+                },
+                error: function (error) {
+                    console.log(error);
+                    callback([])
+                }
+            })
+        }
+
+        function processHistory(historyJSON){
+            console.log(historyJSON);
+            var orders = [];
+            for(var orderID in historyJSON)
+            {
+                var order = historyJSON[orderID];
+                orders.push(new Order(order.ID, order.Date, order.Items))
+            }
+            return orders;
         }
     </script>
 </html>

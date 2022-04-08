@@ -1,5 +1,6 @@
 var fs = require("fs");
 const { debug, Console } = require('console');
+const res = require("express/lib/response");
 var file = "database.db";
 var exists = fs.existsSync(file);
 const sqlite3 = require('sqlite3').verbose();
@@ -43,4 +44,48 @@ function getUser(callback, incorrectcallback, username, password) {
     })
 }
 
-module.exports = { getMenu, getUser }
+function getHistory(callback, errorcallback, username) {
+    var query = `   SELECT Orders.OrderID, Orders.Username, Orders.Date
+                    FROM Orders
+                    WHERE Orders.Username = ?`;
+    console.log("Querying history of " + username);
+    db.all(query, [username], (error, result) => {
+        if (error) {
+            console.log("Database error: " + error.message);
+            errorcallback(error);
+        } else {
+            console.log("History query successful")
+            callback(result);
+        }
+    })
+}
+
+function getHistoryItems(callback, errorcallback, orderHistory) {
+    var orderIDs = "";
+    for(i = 0; i < orderHistory.length; i++){
+        orderIDs += orderHistory[i].OrderID;
+        if (i+1 < orderHistory.length){
+            orderIDs += ", ";
+        }
+    }
+    var query = `  SELECT OrderID, Menu.Name, Menu.Price, Amount
+                    FROM (
+                        SELECT OrderItems.ItemID as ItemID, OrderItems.Amount AS Amount, OrderItems.OrderID as OrderID
+                        FROM OrderItems
+                        WHERE OrderItems.OrderID in (` + orderIDs + `)
+                    )
+                    LEFT JOIN Menu
+                    ON Menu.ID = ItemID`
+    console.log("Querying items of orders " + orderIDs);
+    db.all(query, (error, result) => {
+        if (error) {
+            console.log("Database error: " + error.message);
+            errorcallback(error);
+        } else {
+            console.log("History query successful")
+            callback(result);
+        }
+    })
+}
+
+module.exports = { getMenu, getUser, getHistory, getHistoryItems }
