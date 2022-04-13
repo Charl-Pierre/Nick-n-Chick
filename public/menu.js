@@ -10,7 +10,6 @@ function getMenu(callback) {
         type: 'GET',
         dataType: 'json',
         success: function (result) {
-            //console.log(result);
             callback(processMenu(result));
         },
         error: function (error) {
@@ -21,17 +20,13 @@ function getMenu(callback) {
 }
 
 function processMenu(menuJSON) {
-    //make category obj
     categories = {};
     menuJSON.forEach(element => {
         if(!(element.Category in categories))
         {
             categories[element.Category] = [];
-            //console.log('adding new category: ' + element.Category);
         }
         categories[element.Category].push(element);
-        //console.log('adding ' + element.Name + " to " + element.Category);
-
     });
     
     var menu = new Menu();
@@ -39,14 +34,13 @@ function processMenu(menuJSON) {
         var category = new Category(element1);
 
         categories[element1].forEach(element2 => {
-            var item = new Item(element2.Name, element2.Price, element2.Size, element2.IsVeggie, element2.Image);
+            var item = new Item(element2.Name, element2.ID, element2.Price, element2.Size, element2.IsVeggie, element2.Image);
             category.addItem(item);
         });
         menu.addCategory(category);
     }
     return menu;
 }
-
 
 function onLoad() {
 
@@ -59,14 +53,6 @@ function onLoad() {
     
     bucketList = new BucketList();
     menuSection.appendChild(bucketList.element);
-
-    //final order button
-    var orderButton = document.createElement('button');
-    orderButton.appendChild(document.createTextNode('Place Order'));
-    orderButton.classList.add('Order_Button');
-
-    orderButton.onclick = placeOrder;
-    menuSection.appendChild(orderButton);
 
 }
 
@@ -107,6 +93,7 @@ class Category {
 
 class Item {
     name;
+    ID;
     price;
     size;
     isVeggie;
@@ -114,9 +101,10 @@ class Item {
     bucketElement;
     imgstr
     count = 0;
-    constructor(name, price, size, isVeggie, imgstr) {
+    constructor(name, ID, price, size, isVeggie, imgstr) {
         //Apply specifications of item
         this.name = name;
+        this.ID = ID;
         this.price = price;
         this.size = size;
         this.isVeggie = isVeggie;
@@ -184,40 +172,26 @@ class Item {
     }
 }
 
-class Bucket extends Item {
-    //extra aspects: pieces count, spicyness
-    constructor(name, price, size, isVeggie, pieceCount, spicyness, imgstr) {
-        super(name, price, size, isVeggie, imgstr);
-        this.pieceCount = pieceCount;
-        this.spicyness = spicyness;
-    }
-}
-
-class Drink extends Item  {
-}
-
-class Extra extends Item  {
-}
-
-class Merch extends Item  {
-    //extra aspect: color
-    constructor(name, price, size, isVeggie, color, imgstr) {
-        super(name, price, size, isVeggie, imgstr);
-        this.color = color;
-    }
-}
-
 class BucketList {
     list= [];
     element;
+    orderButton;
     constructor(){
         this.element = document.createElement('aside');
         this.element.id = 'bucketList';
         var txt = document.createElement('b').appendChild(document.createTextNode('Bucket list:'));
         this.element.appendChild(txt);
-        var totalText = document.createElement('b').appendChild(document.createTextNode(''));
-        this.element.appendChild(totalText);
         this.element.classList.add('bucketList');
+
+        var orderForm = document.createElement('form');
+        this.orderButton = document.createElement('input');
+        this.orderButton.type = 'submit';
+        this.orderButton.value = "Place order (0)";
+        this.orderButton.classList.add('logknop');
+        this.orderButton.onclick = placeOrder;
+        orderForm.appendChild(this.orderButton);
+        this.element.appendChild(orderForm);
+        
     }
 
     addItem(item)
@@ -252,19 +226,25 @@ class BucketList {
         }
 
         total = total.toFixed(2);
-        this.element.lastChild.nodeValue = 'Total Price: ' + total;
-        if (this.list.length == 0) this.element.lastChild.nodeValue = '';
+        this.orderButton.value = 'Place Order (' + total + ')';
+        if (this.list.length == 0) this.orderButton.value = 'Place Order (0)';
     }
 }
 
 function placeOrder()
 {
+    //event.preventDefault();
     if (bucketList.list.length == 0){
         window.alert("Can't place an empty order!")
     }
     else {
-        //window.alert('Big McThankies from McSpankies!');
-        window.open("https://www.paypal.com/paypalme/nickandco", '_blank').focus();
+        orderItems = [];
+        
+        bucketList.list.forEach(element => {
+            orderItems.push({id: element.ID, amount: element.count });
+        });
+        
+        $.post('placeOrder', {order: orderItems});
     }
 }
 

@@ -25,6 +25,42 @@ function getMenu(callback, errorcallback) {
     })
 }
 
+function placeOrder(callback, order, username) {
+    var orderQuery = `   INSERT INTO Orders (Username, Date)
+                    VALUES ( ?, ? )`;   
+    var date = new Date().toLocaleDateString("nl-NL");
+
+    console.log('adding order to database');
+    db.run(orderQuery, [username, date], function(error){
+        if (!error){
+            var orderString = "";
+            for(i = 0; i < order.length; i++){
+                orderString += '(' + this.lastID + ', ' + order[i].id + ', ' + order[i].amount + ')';
+                if (i+1 < order.length){
+                    orderString += ', ';
+                } else {
+                    orderString += ';';
+                }
+            }
+            
+            var itemsQuery = `   INSERT INTO OrderItems (OrderID, ItemID, Amount)
+                            VALUES` + orderString;
+            console.log('adding order items to database');
+            db.run(itemsQuery, function(error){
+                if (!error){
+                    console.log('order placed succesfully!')
+                } else {
+                    console.log('error adding order items to database');
+                }
+            })
+
+        } else {
+            console.log("Database error: " + error.message);
+        }
+    })
+    console.log(order);
+}
+
 function getUser(callback, incorrectcallback, username, password) {
     var query = `   SELECT *
                     FROM Users
@@ -40,6 +76,19 @@ function getUser(callback, incorrectcallback, username, password) {
                 incorrectcallback();
             }
                     
+        }
+    })
+}
+
+function addUser(callback, errorcallback, username, password) {
+    var query = `   INSERT INTO Users (Username, Password)
+        	        VALUES ( ?, ?)`;
+    db.run(query, [username, password], function(error){
+        if(!error){
+            callback();
+        } else {
+            console.log("Database error: " + error.message);
+            errorcallback()
         }
     })
 }
@@ -88,4 +137,4 @@ function getHistoryItems(callback, errorcallback, orderHistory) {
     })
 }
 
-module.exports = { getMenu, getUser, getHistory, getHistoryItems }
+module.exports = { getMenu, placeOrder, getUser, addUser, getHistory, getHistoryItems }

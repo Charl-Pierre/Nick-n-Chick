@@ -2,7 +2,7 @@
 <html lang="nl">
     <head>
         <meta charset="utf-8">
-        <title>NnC Login</title>
+        <title>NnC MyChick</title>
         <link rel="stylesheet" href="style.css">
         <link rel="icon" type="image/png" href="https://i.imgur.com/JXX5Voe.png">
         <script type="text/javascript" src="visuals.js"></script>  
@@ -16,7 +16,7 @@
             <a class = "nav__inactive" href="menu.html">Menu</a>
             <a class = "nav__inactive" href="contact.html">Contact</a>
             <a class = "nav__inactive--res" href="reserveren.html">Reserveren</a>
-            <a class = "nav__inactive--acc" href="/account">MyNick</a>
+            <a class = "nav__inactive--acc" href="/account">MyChick</a>
 
         </nav>
         <header>
@@ -25,6 +25,12 @@
             </div>
         </header>
         <section>
+            <form name="logout" action="/logout" method="GET">
+                <input type="submit" class= "logknop" value="Log Out"/>
+            </form>
+        </section>
+
+        <section id="OrderHistory">
             <!--Menu placeholder section-->
             
         </section>
@@ -60,22 +66,13 @@
     </body>
     <script>
         window.addEventListener('load', function () {
-            const ordersHistory = document.getElementsByTagName('section')[0];
+            const ordersHistory = document.getElementById('OrderHistory');
             getHistory(history => {
-                history.forEach(order => {
-                    ordersHistory.appendChild(order.orderElement);
-                    console.log(order);
-                    console.log(order.element);
-                });
+                for(var i = history.length-1; i >= 0; i--){
+                    ordersHistory.appendChild(history[i].orderElement);
+                }
                 
             });
-            
-
-
-            //request allemaal bs
-            
-            //var testOrder = new Order(121, "03/01/2002", ["chicken borger", "veggie borgi"], [12.99, 2.0], [2, 3]);
-            //ordersHistory.appendChild(testOrder.orderElement);
         })
 
         class Order 
@@ -161,7 +158,6 @@
         }
 
         function processHistory(historyJSON){
-            console.log(historyJSON);
             var orders = [];
             for(var orderID in historyJSON)
             {

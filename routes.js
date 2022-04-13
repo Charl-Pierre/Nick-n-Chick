@@ -13,6 +13,10 @@ router.use(sessions({
   resave: false 
 }));
 
+router.get('/register.html', (req, res) =>{
+    res.sendFile('private/register.html', {root: __dirname})
+})
+
 router.get('/getMenu', (req, res) => {
     res.contentType('application/json');
     db.getMenu((data) => {
@@ -45,7 +49,6 @@ router.get('/getHistory', (req, res) => {
                 var order = orders[item.OrderID];
                 order.Items.push(item);
             })
-            console.log(orders);
             
             res.status(200).json(orders);
         }, (error) => {
@@ -55,6 +58,17 @@ router.get('/getHistory', (req, res) => {
         res.status(501).json({ error: error.message});
     }, req.session.userid);
 });
+
+router.post('/placeOrder', (req, res) => {
+    if (req.session.loggedIn) {
+        db.placeOrder((result) => {
+            res.status(200);
+        }, req.body.order, req.session.userid);
+    } else {
+        res.status(403).json({ error: "User is not logged in."});
+    }
+    
+})
 
 router.get('/account', (req, res) => {
     if (req.session.loggedIn)
@@ -79,7 +93,20 @@ router.post('/login',(req,res) => {
     }, req.body.username, req.body.password);
 })
 
+router.post('/register', (req, res) => {
+    db.addUser(() => {
+        var session=req.session;
+        session.userid = req.body.username;
+        req.session.loggedIn = true;
+        console.log(req.session);
+        res.sendFile('private/account.html',{root:__dirname})
+    }, () => {
+        res.send('Failed to register account');
+    }, req.body.username, req.body.password)
+})
+
 router.get('/logout',(req,res) => {
+    console.log('logout test')
     req.session.destroy();
     res.redirect('/');
 });
