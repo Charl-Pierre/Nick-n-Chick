@@ -1,9 +1,11 @@
+//processes the menu and prints them onto the page with some nice styling
 const tempAside = document.createElement('aside');
 var bucketList;
 window.addEventListener('load', function () {
 onLoad();
 })
 
+//get and process menu
 function getMenu(callback) {
     $.ajax({
         url: 'getMenu',
@@ -13,6 +15,7 @@ function getMenu(callback) {
             callback(processMenu(result));
         },
         error: function (error) {
+            //if it fails, log the error and return an empty menu
             console.log(error);
             callback(new Menu([]))
         }
@@ -21,6 +24,7 @@ function getMenu(callback) {
 
 function processMenu(menuJSON) {
     categories = {};
+    //for each element in the JSON, it adds it to the list of categories
     menuJSON.forEach(element => {
         if(!(element.Category in categories))
         {
@@ -28,7 +32,6 @@ function processMenu(menuJSON) {
         }
         categories[element.Category].push(element);
     });
-    
     var menu = new Menu();
     for (var element1 in categories) {
         var category = new Category(element1);
@@ -68,7 +71,7 @@ class Menu {
     }
 
     addCategory(category) {
-        //adds an item html to cat html
+        //adds an item html to category html
         this.categories.push(category);
         this.element.appendChild(category.element);
     }
@@ -172,23 +175,30 @@ class Item {
     }
 }
 
+// BucketList is how we call our 'shopping cart'. 
+//It's a pun on the term bucket list and the buckets that our chicken comes in
 class BucketList {
     list= [];
     element;
     orderButton;
     constructor(){
+
+        //Create DOM element for the list
         this.element = document.createElement('aside');
         this.element.id = 'bucketList';
         var txt = document.createElement('b').appendChild(document.createTextNode('Bucket list:'));
         this.element.appendChild(txt);
         this.element.classList.add('bucketList');
 
+        //Create DOM element for the 'place order' button
         var orderForm = document.createElement('form');
         this.orderButton = document.createElement('input');
         this.orderButton.type = 'submit';
         this.orderButton.value = "Place order (0)";
         this.orderButton.classList.add('logknop');
         this.orderButton.onclick = placeOrder;
+
+        //Append everything appropriately
         orderForm.appendChild(this.orderButton);
         this.element.appendChild(orderForm);
         
@@ -233,18 +243,37 @@ class BucketList {
 
 function placeOrder()
 {
-    //event.preventDefault();
+    event.preventDefault();
+
+    //Prevent users from placing an empty order
     if (bucketList.list.length == 0){
         window.alert("Can't place an empty order!")
     }
     else {
         orderItems = [];
         
+        //Extract the necessary data out of the bucketlist
         bucketList.list.forEach(element => {
             orderItems.push({id: element.ID, amount: element.count });
         });
-        
-        $.post('placeOrder', {order: orderItems});
+
+        //Send a POST request
+        $.ajax({
+            url: 'placeOrder',
+            type: 'POST',
+            dataType: 'json',
+            data: {order: orderItems},
+
+            //If the order was succesfully placed, reload the page
+            success: function (result) {
+                location.reload();
+            },
+            //If the user is not logged in, send them to the login page.
+            error: function (error) {
+                window.location.replace('/account');
+                
+            }
+        });
     }
 }
 

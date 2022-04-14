@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<!--This HTML file is the account page, after logging in, a user can see their order history on this page,
+    (retrieved via the getHistory and processHistory functions). Here you also have the option to change your password.
+    Pressing the button goes to the Password page.-->
 <html lang="nl">
     <head>
         <meta charset="utf-8">
@@ -16,7 +19,7 @@
             <a class = "nav__inactive" href="menu.html">Menu</a>
             <a class = "nav__inactive" href="contact.html">Contact</a>
             <a class = "nav__inactive--res" href="reserveren.html">Reserveren</a>
-            <a class = "nav__inactive--acc" href="/account">MyChick</a>
+            <a class = "nav__inactive--acc" href="account">MyChick</a>
 
         </nav>
         <header>
@@ -25,8 +28,12 @@
             </div>
         </header>
         <section>
-            <form name="logout" action="/logout" method="GET">
+            <form name="logout" action="logout" method="GET">
                 <input type="submit" class= "logknop" value="Log Out"/>
+            </form>
+            <br>
+            <form name="password" action="passwordPage" method="GET">
+                <input type="submit" class= "logknop" value="Change Password"/>
             </form>
         </section>
 

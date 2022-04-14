@@ -1,5 +1,5 @@
-
-window.addEventListener('load', function () 
+// this file changes the colors of the website according to the user's wishes (as it is configured in the footer)
+window.addEventListener('load', function () //boo(se), schrik it's a me
 {
     //Get footer object
     var footer = document.getElementsByTagName("footer")[0];
