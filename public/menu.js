@@ -32,10 +32,12 @@ function processMenu(menuJSON) {
         }
         categories[element.Category].push(element);
     });
+
     var menu = new Menu();
     for (var element1 in categories) {
         var category = new Category(element1);
 
+        //adds items along with their categories to the categories list, after making an item out of them
         categories[element1].forEach(element2 => {
             var item = new Item(element2.Name, element2.ID, element2.Price, element2.Size, element2.IsVeggie, element2.Image);
             category.addItem(item);
@@ -49,16 +51,17 @@ function onLoad() {
 
     const menuSection = document.getElementsByTagName('section')[0];
     menuSection.classList.add('menuSection');
-
+    
     getMenu(menu => {
         menuSection.insertBefore(menu.element, menuSection.lastChild);
     });
     
+    //makes a bucket list for the order display on the side of the page
     bucketList = new BucketList();
     menuSection.appendChild(bucketList.element);
 
 }
-
+//menu definition
 class Menu {
     categories = [];
     element;
@@ -76,7 +79,7 @@ class Menu {
         this.element.appendChild(category.element);
     }
 }
-
+//Category definitions
 class Category {
     items = [];
     element;
@@ -204,7 +207,7 @@ class BucketList {
         
     }
 
-    addItem(item)
+    addItem(item) //self-explanatory
     {
         if (!this.list.includes(item)){
             this.list.push(item);
@@ -214,7 +217,7 @@ class BucketList {
     }
 
 
-    removeItem(item)
+    removeItem(item) //also self explanatory
     {
         if (item.count == 0)
         {
@@ -230,13 +233,17 @@ class BucketList {
 
     updateTotal()
     {
+        //updates the price total of the order
         var total = 0;
         for (var i = 0; i < this.list.length; i++){
             total += this.list[i].price * this.list[i].count;
         }
 
+        //rounds the total to two digits regardless of how many decimals
         total = total.toFixed(2);
         this.orderButton.value = 'Place Order (' + total + ')';
+
+        //default button text for when the user hasn't made a selection yet
         if (this.list.length == 0) this.orderButton.value = 'Place Order (0)';
     }
 }

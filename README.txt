@@ -5,31 +5,27 @@ Nick Mandoeng (3774744)
 
 http://webtech.science.uu.nl/group23/index.html
 
+Our application uses the following structure: 
 
-{A brief explanation of your web-site, the structure of your application, including every content file and every code file(??????), the structure of your database.}
-Whenever a file needs access to a resource from the database, the request first goes through router.js and then executes the target function. waaaaaaaaaaaaaaaaaaaaaaaaaaaaah
+(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧ 
+=-=-=-=-= 
+The Files
+=-=-=-=-=
+app.js sets up the web app and imports all required modules.
 
-...dus.......deze moeten ig allemaal opgenoemd worden??
-account.html
-login.html
-password.html
-register.html
-aboutus.html
-contact.html
-index.html
-menu.html
-reserveren.html
-_
-app.js
-database.js
-menu.js
-routes.js
-visuals.js
-_
-style.css
-database.db
+The database.db contains all orderable items on our website, i.e. the food, drinks and merch. The database.js extracts the information from this database and routes.js converts it to readable lists. The menu.js script will then read these items from the database and handles how these items are displayed on the Menu part of the website, this menu being menu.html. 
 
---The Database--
+Whenever the client performs an action (makes a request), on one of these html pages: [account.html, login.html, password.html, register.html and menu.html], i.e. the user tries to access a resource, it triggers a function in routes.js which then accesses the resource (in this case the database).
+
+Visuals.js is the script that handles the visual configurations the user can change if they so desire, i.e. light, dark and true dark theme on different aspects of the website.
+
+Style.css handles all css rules applied on the website.
+
+Reserveren.html, aboutus.html, contact.html and index.html are all simple pages that do not use any particular scripts, instead using solely html+css code, and the linked visuals.js file in the footers. The images folder contains the images used on these pages, whereas the images used on the Menu page are uploaded on imgur and linked through there. 
+
+=-=-=-=-=-=-= 
+The Database 
+=-=-=-=-=-=-=
 The database contains user accounts, a menu of all the dishes we sell and an order archive that holds all the orders we've had an the items that were ordered
 The users are saved in a single table containing the ID, username, password and email of every user.
 The menu is saved as a combination of an item table and category table. The category table contains 4 types of things we sell and the item table contains the actual dishes.
